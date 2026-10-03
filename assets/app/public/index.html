@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compliance Calendar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="auth" class="authwrap hidden"></div>
+<header class="topbar">
+  <div class="topbar-row">
+    <div class="brand">
+      <div class="logo"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h3M8 15h3M14 11v6M17 13v4"/></svg></div>
+      <h1>SEBI Listing Regulation and Companies Act, 2013 Compliance Calendar</h1>
+    </div>
+    <div class="top-actions">
+      <select id="orgSel" class="org-sel hidden" title="Switch workspace (platform owner)"></select>
+      <div id="mailPill" class="pill-account"></div>
+      <div id="userMenu" class="user-menu"></div>
+      <span id="livePill" class="live-pill" title="Dashboard updates automatically when data changes"><i></i>Live</span>
+    </div>
+  </div>
+  <div class="topbar-row sub">
+    <label class="sel-label">🏢 COMPANY:</label>
+    <select id="companySel" class="big-select"></select>
+    <label class="sel-label">📅 FY:</label>
+    <select id="fySel" class="big-select fy"></select>
+    <div class="codes" id="codes"></div>
+  </div>
+</header>
+
+<main>
+  <h2 class="page-title" id="pageTitle">COMPLIANCE CALENDAR</h2>
+  <nav class="tabs" id="tabs">
+    <button data-tab="calendar" class="active">📅 Compliance Calendar <span class="count mono" id="cntCal"></span></button>
+    <button data-tab="events">⚡ Event Based <span class="count" id="cntEv"></span></button>
+    <button data-tab="ann">📢 Company Announcements <span class="count" id="cntAnn"></span></button>
+    <button data-tab="manual">⊕ Manual Entry <span class="count amber" id="cntMan">0</span></button>
+    <button data-tab="email">✉ Email Updates</button>
+    <button data-tab="bse">🏛 BSE Circulars <span class="count" id="cntBse"></span></button>
+    <button data-tab="nse">📈 NSE Circulars <span class="count" id="cntNse"></span></button>
+    <button data-tab="sebi">⚖ SEBI Updates <span class="count" id="cntSebi"></span></button>
+    <button data-tab="companies">⚙ Companies & Settings</button>
+    <button data-tab="team">👥 Team & Clients</button>
+    <button data-tab="log">🧾 Activity</button>
+  </nav>
+  <section id="view"></section>
+  <footer>
+    <b>Compliance Calendar for Indian Listed Companies, Private Companies & LLPs • NSE Main Board & BSE</b><br>
+    Due dates are computed in IST from SEBI LODR, SEBI (PIT/SAST/DP/ICDR) Regulations, Companies Act, 2013 and LLP Act, 2008 timelines.
+    Filings are verified on BSE automatically; reminders are e-mailed daily from the start of the reminder window until the filing is updated.
+    Always confirm timelines against the latest SEBI / MCA notifications.
+  </footer>
+</main>
+
+<div id="modal" class="modal hidden"><div class="modal-card" id="modalCard"></div></div>
+<div id="toast" class="toast hidden"></div>
+<script src="app.js"></script>
+</body>
+</html>
