@@ -58,3 +58,6 @@ assets/app/                   the web app (Node.js + Express, no database server
 - Exchange data is read from public BSE / NSE pages. If you plan to offer this commercially, check whether the exchanges
   require permission or a data licence.
 - Never commit `.env` or `data/` — they hold passwords (hashed), encrypted mailbox secrets and your clients' data.
+
+## Licence
+MIT — see [LICENSE](LICENSE). Compliance timelines are provided as-is, without warranty; they are not legal advice.
