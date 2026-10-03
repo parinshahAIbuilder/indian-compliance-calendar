@@ -23,7 +23,7 @@ into your skills directory) and ask things like *"set up a compliance calendar f
 pattern for September been filed on BSE?"* or *"add a new LODR compliance to the calendar"*.
 
 ### 2. Just run the app
-Requirements: Node.js 18+ and `curl` (built into Windows 10+, macOS and most Linux).
+Requirements: Node.js 18+, `curl` (built into Windows 10+, macOS and most Linux) and Google Chrome or Microsoft Edge (used automatically when BSE blocks non-browser requests).
 
 ```bash
 node scripts/deploy_app.mjs ./compliance-calendar --org "Your Firm"

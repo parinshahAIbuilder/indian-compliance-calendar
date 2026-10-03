@@ -55,4 +55,64 @@ export async function getJSON(url, opts = {}, tries = 3) {
   throw last;
 }
 
-export const bseApi = (p, tries) => getJSON('https://api.bseindia.com/BseIndiaAPI/api/' + p, { headers: BSE_HEADERS }, tries);
+// ── Browser fallback ──
+// BSE's firewall sometimes rejects every non-browser client (curl included) while real browsers still get data.
+// When that happens, requests go through a hidden Chrome/Edge (puppeteer-core + the browser already installed),
+// which fetches from a bseindia.com page exactly like the website does. The browser closes after 3 idle minutes.
+const BROWSERS = [
+  process.env.BROWSER_PATH,
+  'C:/Program Files/Google/Chrome/Application/chrome.exe',
+  'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
+  'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
+  'C:/Program Files/Microsoft/Edge/Application/msedge.exe',
+  '/usr/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser',
+  '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+].filter(Boolean);
+let browserPage = null, browserIdle = null, browserStarting = null;
+
+async function bsePage() {
+  clearTimeout(browserIdle);
+  browserIdle = setTimeout(async () => { const p = browserPage; browserPage = null; try { await p?.browser().close(); } catch {} }, 3 * 60e3);
+  if (browserPage && !browserPage.isClosed()) return browserPage;
+  if (browserStarting) return browserStarting;
+  browserStarting = (async () => {
+    const { default: puppeteer } = await import('puppeteer-core');
+    const fs = await import('node:fs'), os = await import('node:os');
+    let lastErr;
+    for (const exe of BROWSERS.filter(p => fs.existsSync(p))) {
+      try {
+        const b = await puppeteer.launch({
+          executablePath: exe, headless: true,
+          args: ['--headless=new', '--no-sandbox', '--disable-gpu', '--disable-blink-features=AutomationControlled', '--no-first-run'],
+          userDataDir: path.join(os.tmpdir(), 'compliance-calendar-' + path.basename(exe).replace(/\W/g, ''))
+        });
+        const p = await b.newPage();
+        await p.setUserAgent((await b.userAgent()).replace('HeadlessChrome', 'Chrome'));
+        await p.goto('https://www.bseindia.com/', { waitUntil: 'domcontentloaded', timeout: 60000 });
+        return (browserPage = p);
+      } catch (e) { lastErr = e; }
+    }
+    throw new Error('BSE blocked the request and no usable Chrome/Edge was found for the fallback' + (lastErr ? ` (${lastErr.message.split('\n')[0]})` : ''));
+  })();
+  try { return await browserStarting; } finally { browserStarting = null; }
+}
+
+async function bseViaBrowser(url) {
+  const page = await bsePage();
+  const text = await page.evaluate(async u => { const r = await fetch(u); return r.text(); }, url);
+  const t = text.trim();
+  if (t.startsWith('{') || t.startsWith('[')) return JSON.parse(t);
+  throw new Error(/access denied/i.test(t) ? 'BSE blocked the request (browser fallback too)' : 'Unexpected BSE response: ' + t.slice(0, 120));
+}
+
+let preferBrowser = 0; // after a block, use the browser directly for 30 minutes
+export async function bseApi(p, tries = 2) {
+  const url = 'https://api.bseindia.com/BseIndiaAPI/api/' + p;
+  if (Date.now() < preferBrowser) return bseViaBrowser(url);
+  try { return await getJSON(url, { headers: BSE_HEADERS }, tries); }
+  catch (e) {
+    if (!/blocked|access denied|unexpected response/i.test(e.message)) throw e;
+    preferBrowser = Date.now() + 30 * 60e3;
+    return bseViaBrowser(url);
+  }
+}

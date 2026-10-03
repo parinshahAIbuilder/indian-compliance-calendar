@@ -4,6 +4,12 @@
   "description": "Compliance calendar for Indian listed companies, private companies and LLPs - SEBI LODR, Companies Act, MCA, BSE/NSE",
   "type": "module",
   "main": "server.js",
-  "scripts": { "start": "node server.js" },
-  "dependencies": { "express": "^4.21.2", "nodemailer": "^6.9.16" }
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "nodemailer": "^6.9.16",
+    "puppeteer-core": "^23.11.1"
+  }
 }

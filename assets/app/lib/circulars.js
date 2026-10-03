@@ -74,7 +74,8 @@ async function nseListedPage(kind) {
 }
 
 export async function fetchNse() {
-  const [eq, debt] = await Promise.allSettled([nseListedPage('equity'), nseListedPage('debt')]);
+  const retry = kind => nseListedPage(kind).catch(() => new Promise(r => setTimeout(r, 3000)).then(() => nseListedPage(kind)));
+  const [eq, debt] = await Promise.allSettled([retry('equity'), retry('debt')]);
   const items = [eq, debt].filter(p => p.status === 'fulfilled').flatMap(p => p.value);
   if (!items.length) throw (eq.reason || debt.reason || new Error('No NSE circulars found'));
   return items.sort((a, b) => b.date.localeCompare(a.date));

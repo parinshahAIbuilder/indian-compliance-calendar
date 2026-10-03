@@ -21,6 +21,10 @@ breaks, run `scripts/check_sources.mjs` first, then re-discover the endpoint (se
   Node's strict HTTP parser (undici) rejects with `HPE_INVALID_HEADER_TOKEN`; Node's `https` with `insecureHTTPParser`
   is in turn fingerprinted and blocked by Akamai. curl (Windows ships `curl.exe`) with `--compressed` works reliably.
   The app's `lib/http.js` wraps this and retries non-JSON answers.
+- **When BSE blocks curl too** (seen from Oct 2026: every non-browser client gets `Access Denied` while real browsers
+  still get JSON), `lib/http.js` falls back to a hidden Chrome/Edge via `puppeteer-core`: it opens www.bseindia.com and
+  runs `fetch()` from that page. It prefers the browser for 30 min after a block and closes it after 3 idle minutes.
+  Needs Chrome or Edge installed (or `BROWSER_PATH` in `.env`). On this setup headless Edge failed to launch; Chrome worked.
 - **NSE needs a session cookie.** First GET an HTML page (writes cookies to a jar), then call the API with that jar.
   Use `--http1.1`; HTTP/2 to nseindia.com sometimes hangs until timeout.
 - Corporate/office networks and some ISPs block `*.trycloudflare.com` — relevant only for sharing the app, not for fetching.

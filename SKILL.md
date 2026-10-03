@@ -29,7 +29,7 @@ Read the reference files only when the task needs them:
 ## Typical tasks and how to do them
 
 ### 1. Set up the app for someone
-1. Check Node 18+ and curl are available (`node -v`, `curl --version`). Windows 10+ has `curl.exe`.
+1. Check Node 18+, curl and Chrome or Edge are available (`node -v`, `curl --version`). Windows 10+ has `curl.exe`; the browser is the fallback when BSE blocks non-browser requests.
 2. Deploy: `node scripts/deploy_app.mjs "<target folder>" --org "<their firm name>"` (re-running it upgrades code and keeps `data/` and `.env`).
 3. Start: `node server.js` in that folder (Windows: `start.bat`). Open `http://localhost:4300`.
 4. Have the **user** create the owner account on the first-time setup screen. Don't pick passwords for people.
