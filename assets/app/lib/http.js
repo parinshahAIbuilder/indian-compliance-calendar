@@ -65,7 +65,7 @@ const BROWSERS = [
   'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
   'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
   'C:/Program Files/Microsoft/Edge/Application/msedge.exe',
-  '/usr/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser',
+  '/usr/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser', '/snap/bin/chromium',
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 ].filter(Boolean);
 let browserPage = null, browserIdle = null, browserStarting = null;
@@ -79,7 +79,10 @@ async function bsePage() {
     const { default: puppeteer } = await import('puppeteer-core');
     const fs = await import('node:fs'), os = await import('node:os');
     let lastErr;
-    for (const exe of BROWSERS.filter(p => fs.existsSync(p))) {
+    // also pick up a Playwright-installed Chromium (used on Linux servers, incl. ARM)
+    const pw = path.join(os.homedir(), '.cache', 'ms-playwright');
+    const extra = fs.existsSync(pw) ? fs.readdirSync(pw).filter(d => d.startsWith('chromium')).map(d => path.join(pw, d, 'chrome-linux', 'chrome')) : [];
+    for (const exe of [...BROWSERS, ...extra].filter(p => fs.existsSync(p))) {
       try {
         const b = await puppeteer.launch({
           executablePath: exe, headless: true,

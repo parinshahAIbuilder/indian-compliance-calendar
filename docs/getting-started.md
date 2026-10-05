@@ -55,7 +55,7 @@ Leave the window open — the app only checks BSE and sends reminders while it i
 ## 6. Add your first company
 
 1. Open **⚙ Companies & Settings → Add**.
-2. **Listed company:** type part of the name, the BSE code (e.g. `544513`), NSE symbol or ISIN and pick it from the
+2. **Listed company:** type part of the name, the BSE code (e.g. `500209`), NSE symbol or ISIN and pick it from the
    suggestions. Codes are filled in and BRSR is suggested based on market-cap rank.
 3. **Private company / LLP:** choose the entity type and fill in the form.
 4. Tick the profile flags that apply — listed debt, monitoring agency, earnings calls, BRSR, Large Corporate, cost audit,

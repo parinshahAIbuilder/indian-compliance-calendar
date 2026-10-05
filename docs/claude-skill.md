@@ -9,7 +9,7 @@ extend it; `references/` holds the compliance master, data-source notes and oper
 
 | Ask Claude… | What happens |
 |---|---|
-| "Set up a compliance calendar for our listed company, BSE code 544513" | Checks prerequisites, deploys the app, starts it, walks you through creating the owner account and adding the company |
+| "Set up a compliance calendar for our listed company, BSE code 500209" | Checks prerequisites, deploys the app, starts it, walks you through creating the owner account and adding the company |
 | "Has the September shareholding pattern been filed?" | Looks it up in the running app or directly on BSE and reports the exact submission time |
 | "When is our Reg 24A report due and what's the regulation?" | Answers from the compliance master and flags ⚠ items to verify |
 | "Add CSR-1 / a new SEBI circular requirement to the calendar" | Edits `lib/master.js`, regenerates the docs, restarts and verifies |

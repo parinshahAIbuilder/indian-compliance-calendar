@@ -27,6 +27,7 @@ It ships in two forms from this one repository:
 - [Features in detail](#features-in-detail)
 - [What it covers](#what-it-covers)
 - [Quick start (5 minutes)](#quick-start-5-minutes)
+- [Always-on hosting (no office PC)](#always-on-hosting-no-office-pc)
 - [Using it as a Claude skill](#using-it-as-a-claude-skill)
 - [Configuration (`.env`)](#configuration-env)
 - [How it works](#how-it-works)
@@ -148,13 +149,26 @@ Check that BSE / NSE / SEBI are reachable at any time:
 node scripts/check_sources.mjs
 ```
 
+## Always-on hosting (no office PC)
+
+Reminders only go out while the app is running. To stop depending on an office PC that may sleep or be switched off,
+run it on a small cloud server — Oracle Cloud's *Always Free* tier in Mumbai works well (Indian IP for BSE/NSE).
+On a fresh Ubuntu server, one command installs everything (Node.js, headless Chromium for the BSE fallback, HTTPS via
+Caddy, a systemd service that starts on boot and restarts on failure):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/parinshahAIbuilder/indian-compliance-calendar/main/deploy/server-setup.sh | sudo bash
+```
+
+👉 Click-by-click guide: **[deploy/ORACLE-CLOUD.md](deploy/ORACLE-CLOUD.md)** · moving existing data: `deploy/migrate-to-server.sh`.
+
 ## Using it as a Claude skill
 
 This repository is also a ready-made [Claude skill](https://docs.claude.com/en/docs/agents-and-tools/agent-skills/overview)
 (`SKILL.md` + `references/` + `scripts/` + `assets/app/`). Once installed, you can ask Claude things like:
 
 - *"Set up a compliance calendar for our listed company."*
-- *"Has the shareholding pattern for September been filed on BSE for scrip 544513?"*
+- *"Has the shareholding pattern for September been filed on BSE for scrip 500209?"*
 - *"Add a new LODR compliance to the calendar."*
 - *"The BSE check stopped working — fix it."*
 - *"Share the dashboard with my team on the office Wi-Fi."*
@@ -222,6 +236,10 @@ More detail: **[docs/how-it-works.md](docs/how-it-works.md)** and [`references/d
 │   ├── compliance-master.md    every compliance, frequency, timeline, BSE source
 │   ├── data-sources.md         BSE / NSE / SEBI endpoints, headers, quirks
 │   └── operations.md           accounts, e-mail, WhatsApp, hosting, known pitfalls
+├── deploy/
+│   ├── ORACLE-CLOUD.md         always-on hosting guide (free Oracle Cloud server)
+│   ├── server-setup.sh         one-command Ubuntu install with HTTPS + auto-start
+│   └── migrate-to-server.sh    move an existing installation's data to the server
 ├── scripts/
 │   ├── deploy_app.mjs          install / upgrade the app into any folder
 │   └── check_sources.mjs       health check of all data sources
@@ -245,6 +263,7 @@ More detail: **[docs/how-it-works.md](docs/how-it-works.md)** and [`references/d
 | [FAQ & troubleshooting](docs/faq.md) | something isn't working |
 | [Compliance master](references/compliance-master.md) | checking which items and timelines are covered |
 | [Operations](references/operations.md) | e-mail, WhatsApp, team access, hosting |
+| [Always-on hosting](deploy/ORACLE-CLOUD.md) | running it 24×7 on a free cloud server |
 
 ## Security & data
 
