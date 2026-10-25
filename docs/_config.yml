@@ -1,0 +1,7 @@
+title: Indian Compliance Calendar
+description: Free, open-source compliance calendar for Indian companies (SEBI LODR, Companies Act, MCA)
+theme: jekyll-theme-cayman
+plugins:
+  - jekyll-relative-links
+relative_links:
+  enabled: true
